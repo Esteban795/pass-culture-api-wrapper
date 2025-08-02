@@ -39,7 +39,7 @@ class PassCultureClient:
         )
         
         # Initialize endpoints
-        self.bookings = BaseEndpoint(self) 
+        self.bookings = BookingsEndpoint(self) 
         
     def _get_default_headers(self) -> dict:
         """
