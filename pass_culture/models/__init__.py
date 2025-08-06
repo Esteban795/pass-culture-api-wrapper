@@ -1,4 +1,4 @@
-from .bookings import (
+from models.bookings import (
     Booking,
     BookingList,
     BookingStatus,

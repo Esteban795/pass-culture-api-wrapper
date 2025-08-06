@@ -2,10 +2,10 @@ from typing import Optional
 
 import httpx
 
-from .config import Settings
-from .endpoints.base import BaseEndpoint
-from .endpoints.bookings import BookingsEndpoint
-from .exceptions import PassCultureAPIError
+from config import Settings
+from endpoints.base import BaseEndpoint
+from endpoints.bookings import BookingsEndpoint
+from exceptions import PassCultureAPIError
 
 
 class PassCultureClient:
@@ -35,21 +35,22 @@ class PassCultureClient:
         self._client = httpx.AsyncClient(
             base_url=self.settings.api_endpoint,
             timeout=self.timeout,
-            headers=self._get_default_headers(),
         )
         
         # Initialize endpoints
         self.bookings = BookingsEndpoint(self) 
         
-    def _get_default_headers(self) -> dict:
+    def _get_default_headers(self, applicationData : bool) -> dict:
         """
         Get the default headers for API requests.
         """
-        return {
+        base = {
             "Authorization": f"Bearer {self.settings.api_key}",
-            "Content-Type": "application/json",
             "Accept": "application/json",
         }
+        if applicationData:
+            base["Content-Type"] = "application/json"
+        return base
     
     async def request(
         self,
@@ -69,8 +70,10 @@ class PassCultureClient:
                 params=params,
                 data=data,
                 json=json_data,
+                headers=self._get_default_headers(json_data is not None),
             )
             response.raise_for_status()
+            print(response.json())
             return response.json()
         except httpx.HTTPStatusError as e:
             raise PassCultureAPIError(f"HTTP error: {e.response.status_code} - {e.response.text}")

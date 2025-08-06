@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import List, Optional
 
-from .common import PaginationInfo
+from models.common import PaginationInfo
 from pydantic import BaseModel, Field
 
 
@@ -50,7 +50,6 @@ class BookingList(BaseModel):
     """
     
     bookings: List[Booking] = Field(..., alias="data")
-    pagination: PaginationInfo
     
     class Config:
         populate_by_name = True

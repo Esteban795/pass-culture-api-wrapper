@@ -1,8 +1,8 @@
 from typing import Optional
 
-from ..models.common import CtxMessageType
-from ..models.bookings import Booking, BookingList,BookingStatus
-from .base import BaseEndpoint
+from models.common import CtxMessageType
+from models.bookings import Booking, BookingList,BookingStatus
+from endpoints.base import BaseEndpoint
 
 
 
@@ -10,6 +10,8 @@ class BookingsEndpoint(BaseEndpoint):
     """
     Endpoint for interacting with Pass Culture bookings.
     """
+    
+    bookingsBaseRoute = "bookings/v1"
     
     async def list_bookings(
         self, 
@@ -73,7 +75,7 @@ class BookingsEndpoint(BaseEndpoint):
         data = await self._patch(f"bookings/v1/cancel/token/{booking_id}")
         return CtxMessageType.model_validate(data)
     
-    async def validate_booking(self, booking_id: int) -> CtxMessageType:
+    async def validate_booking(self, booking_id: str) -> CtxMessageType:
         """
         Validate a booking (e.g., when the user attends the event).
         
